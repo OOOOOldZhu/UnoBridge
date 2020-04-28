@@ -26,6 +26,9 @@ private:
     void ReadData();
 };
 
-
+//signals:
+//    void readyRead();
+//private slots:
+//    void ReadData();
 
 #endif // CONNECTOR_H
