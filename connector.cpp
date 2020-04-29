@@ -19,14 +19,12 @@ Connector::Connector(){
     //1，连接websocket
     this->initWebsocket();
     //2，先创建串口连接
-    //this->initSerial();
+    this->initSerial();
 }
 
 void Connector::initWebsocket(){
     QWebSocketServer *server = new QWebSocketServer(QStringLiteral("Inspection server"),QWebSocketServer::NonSecureMode);
-    //websocketServer(server, QWebSocketServer::NonSecureMode));
-    //connect(m_WebSocketServer,SIGNAL(newConnection()),this,SLOT(onNewConnection()));
-    //QObject::connect(server,&QWebSocketServer::newConnection,this,&Connector::onNewConnection);
+
     this->server=server;
     if(server->listen(QHostAddress::Any, 1234))
     {
@@ -35,6 +33,7 @@ void Connector::initWebsocket(){
 }
 
 void Connector::onNewConnection(){
+    qInfo() << "socket onNewConnection()";
     QWebSocket *socket = this->server->nextPendingConnection();
     QObject::connect(socket, &QWebSocket::textMessageReceived, this, &Connector::onReceivedMsg);
     QObject::connect(socket, &QWebSocket::disconnected, this, &Connector::socketDisconnected);
@@ -44,7 +43,25 @@ void Connector::onNewConnection(){
 
 void Connector::onReceivedMsg(const QString& message)
 {
-    qInfo() << "socket接收数据: " << message;
+    //QByteArray bytes = message.toLatin1();
+    //QByteArray hexByteArr = bytes.toHex();
+//    QByteArray *arr = new QByteArray();
+//    //"240,121,247"   ----->  [f0,79,f7]
+//    QStringList lis = message.split(',');
+//    for(int i = 0;i < lis.length();i++){
+//        bool ok = true;
+//        int after = lis[i].toInt(&ok,16);
+//        arr->append(after);
+//    }
+
+    qInfo() << "socket接收数据: " << message.toUtf8();
+//    qInfo() << "socket接收数据: " << message.toLatin1();
+//    qInfo() << "socket接收数据: " << message.toUInt();
+//    qInfo() << "socket接收数据: " << message.toStdU16String();
+//    qInfo() << "socket接收数据: " << message.toInt();
+    if(serial){
+       serial->write(message.toLatin1());
+    }
 }
 
 void Connector::socketDisconnected()
@@ -59,9 +76,9 @@ void Connector::initSerial(){
     QSerialPortInfo selectedPortInfo;
     for(int i = 0;i < serialList.length();i++){
         QSerialPortInfo itemInfo = serialList[i];
-        qDebug()<< "< - - - - - - - - - "<<i<<"- - - - - - - - - - - - - - - - -  >";
+        //qDebug()<< "< - - - - - - - - - "<<i<<"- - - - - - - - - - - - - - - - -  >";
         //输出链表头节点的一些信息
-        printPort(itemInfo);
+        //printPort(itemInfo);
         bool a = itemInfo.manufacturer().contains("Arduino");
         bool b = itemInfo.portName().indexOf("cu") >= 0;
         //qDebug()<<a<<" = = = "<<b;
@@ -70,7 +87,8 @@ void Connector::initSerial(){
             break;
         }
     }
-    qDebug()<<"被选中的串口 = "<< selectedPortInfo.portName();
+    printPort(selectedPortInfo);
+
     if(!selectedPortInfo.isNull()){
         QSerialPort *serial = new QSerialPort;
         this->serial=serial;
@@ -96,13 +114,17 @@ void Connector::initSerial(){
 
 //串口数据返回
 void Connector::readData(){
-    qDebug()<<"readData槽函数";
+    //qDebug()<<"串口readData槽函数";
     if(this->serial){
-        QByteArray buf = this->serial->readLine();
+        QByteArray buf = this->serial->readAll();
         QByteArray array =buf.toHex();
         QString str = QString(array);
-        qDebug()<<"接收到的buf     = "<<array;
-        qDebug()<<"接收到的buf.str = "<<str;
+
+        qDebug()<<"串口接收到的buf.str = "<<str;
+        for(int i = 0;i<soketList.length();i++){
+            soketList[i]->sendTextMessage(str);
+        }
+
     }
 }
 
