@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+
+
+/qt_test.pro.user
