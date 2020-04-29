@@ -26,12 +26,14 @@ SOURCES += \
     connector.cpp \
     inspection_server.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    tool.cpp
 
 HEADERS += \
     connector.h \
     inspection_server.h \
-    mainwindow.h
+    mainwindow.h \
+    tool.h
 
 FORMS += \
     mainwindow.ui

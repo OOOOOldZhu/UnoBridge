@@ -1,5 +1,7 @@
 #include "connector.h"
 
+#include <QString>
+
 //websocket通讯
 #include <QWebSocketServer>
 #include <QWebSocket>
@@ -14,6 +16,8 @@
 #include <stdio.h>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
+
+#include <tool.h>
 
 Connector::Connector(){
     //1，连接websocket
@@ -43,25 +47,14 @@ void Connector::onNewConnection(){
 
 void Connector::onReceivedMsg(const QString& message)
 {
-    //QByteArray bytes = message.toLatin1();
-    //QByteArray hexByteArr = bytes.toHex();
-//    QByteArray *arr = new QByteArray();
-//    //"240,121,247"   ----->  [f0,79,f7]
-//    QStringList lis = message.split(',');
-//    for(int i = 0;i < lis.length();i++){
-//        bool ok = true;
-//        int after = lis[i].toInt(&ok,16);
-//        arr->append(after);
-//    }
+    //数据转换参考 https://blog.csdn.net/biersibao/article/details/82884719
 
-    qInfo() << "socket接收数据: " << message.toUtf8();
-//    qInfo() << "socket接收数据: " << message.toLatin1();
-//    qInfo() << "socket接收数据: " << message.toUInt();
-//    qInfo() << "socket接收数据: " << message.toStdU16String();
-//    qInfo() << "socket接收数据: " << message.toInt();
-    if(serial){
-       serial->write(message.toLatin1());
-    }
+    qInfo() << "socket接收数据: " << Tool::tenString2HexStr(message);
+
+//    if(serial){
+//       QByteArray arr = hexString.toUtf8();
+//       serial->write(arr);
+//    }
 }
 
 void Connector::socketDisconnected()
