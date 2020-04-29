@@ -1,5 +1,13 @@
 #include "connector.h"
 
+//websocket通讯
+#include <QWebSocketServer>
+#include <QWebSocket>
+#include <QObject>
+#include <iostream>
+#include <memory>
+
+//串口通讯
 #include <QDebug>
 #include <QCoreApplication>
 #include <QList>
@@ -8,9 +16,42 @@
 #include <QtSerialPort/QSerialPortInfo>
 
 Connector::Connector(){
-    //1，先创建串口连接
-    this->initSerial();
+    //1，连接websocket
+    this->initWebsocket();
+    //2，先创建串口连接
+    //this->initSerial();
 }
+
+void Connector::initWebsocket(){
+    QWebSocketServer *server = new QWebSocketServer(QStringLiteral("Inspection server"),QWebSocketServer::NonSecureMode);
+    //websocketServer(server, QWebSocketServer::NonSecureMode));
+    //connect(m_WebSocketServer,SIGNAL(newConnection()),this,SLOT(onNewConnection()));
+    //QObject::connect(server,&QWebSocketServer::newConnection,this,&Connector::onNewConnection);
+    this->server=server;
+    if(server->listen(QHostAddress::Any, 1234))
+    {
+        QObject::connect(server,&QWebSocketServer::newConnection,this,&Connector::onNewConnection);
+    }
+}
+
+void Connector::onNewConnection(){
+    QWebSocket *socket = this->server->nextPendingConnection();
+    QObject::connect(socket, &QWebSocket::textMessageReceived, this, &Connector::onReceivedMsg);
+    QObject::connect(socket, &QWebSocket::disconnected, this, &Connector::socketDisconnected);
+
+    this->soketList.append(socket);
+}
+
+void Connector::onReceivedMsg(const QString& message)
+{
+    qInfo() << "socket接收数据: " << message;
+}
+
+void Connector::socketDisconnected()
+{
+    qInfo() << "socket断开连接";
+}
+
 
 void Connector::initSerial(){
     //qDebug()<<"1.initSerial() 执行了";

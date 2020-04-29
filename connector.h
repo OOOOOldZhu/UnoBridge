@@ -11,10 +11,17 @@
 
 
 class Connector;
+//智能指针 https://www.cnblogs.com/xudong-bupt/p/9027609.html
+//typedef std::shared_ptr<QWebSocketServer> QWebSocketServerPtr;
+//typedef std::shared_ptr<QWebSocket> QWebSocketPtr;
+
+
 class Connector: public QObject{
     //成员变量
     Q_OBJECT
     QSerialPort *serial;
+    QWebSocketServer *server;
+    QList<QWebSocket*> soketList;
 
     //构造函数
 public:
@@ -22,6 +29,11 @@ public:
 
     //内部函数
 private:
+    void initWebsocket();
+    void onNewConnection();
+    void onReceivedMsg(const QString& message);
+    void socketDisconnected();
+
     void initSerial();
     void readData();
     void printPort(QSerialPortInfo itemInfo);
