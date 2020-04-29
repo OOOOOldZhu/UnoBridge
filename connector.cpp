@@ -32,6 +32,7 @@ void Connector::initSerial(){
     qDebug()<<"被选中的串口 = "<< selectedPortInfo.portName();
     if(!selectedPortInfo.isNull()){
         QSerialPort *serial = new QSerialPort;
+        this->serial=serial;
         //设置串口名 cu.usbmodem142401
         serial->setPortName(selectedPortInfo.portName());
         //connect(serial,&QSerialPort::readyRead,this,&Connector::ReadData);
@@ -45,19 +46,23 @@ void Connector::initSerial(){
 
         qDebug()<<"串口已经打开打开 = "<<isOpen;
         if(isOpen){
-            //QObject::connect(serial,&QSerialPort::readyRead,this,&Connector::ReadData);
+            QObject::connect(serial,&QSerialPort::readyRead,this,&Connector::readData);
+            //            connect(serial,SIGNAL(readyRead()),this,SLOT(readData()));
         }
     }
 
 }
 
 //串口数据返回
-void Connector::ReadData(){
-    QByteArray buf = this->serial->readAll();
-    QByteArray array =buf.toHex();
-    QString str = QString(buf);
-    qDebug()<<"接收到的buf     = "<<buf;
-    qDebug()<<"接收到的buf.str = "<<str;
+void Connector::readData(){
+    qDebug()<<"readData槽函数";
+    if(this->serial){
+        QByteArray buf = this->serial->readLine();
+        QByteArray array =buf.toHex();
+        QString str = QString(array);
+        qDebug()<<"接收到的buf     = "<<array;
+        qDebug()<<"接收到的buf.str = "<<str;
+    }
 }
 
 void Connector::printPort(QSerialPortInfo itemInfo){

@@ -23,13 +23,19 @@ public:
     //内部函数
 private:
     void initSerial();
-    void ReadData();
+    void readData();
     void printPort(QSerialPortInfo itemInfo);
-};
 
 //signals:
-//    void readyRead();
+//        void readyRead();
 //private slots:
-//    void ReadData();
+//    void readData();
+
+
+
+
+
+
+};
 
 #endif // CONNECTOR_H
