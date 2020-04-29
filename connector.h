@@ -24,6 +24,7 @@ public:
 private:
     void initSerial();
     void ReadData();
+    void printPort(QSerialPortInfo itemInfo);
 };
 
 //signals:

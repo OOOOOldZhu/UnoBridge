@@ -20,14 +20,10 @@ void Connector::initSerial(){
         QSerialPortInfo itemInfo = serialList[i];
         qDebug()<< "< - - - - - - - - - "<<i<<"- - - - - - - - - - - - - - - - -  >";
         //输出链表头节点的一些信息
-        qDebug()<< "Name : "<<itemInfo.portName();
-        qDebug()<< "Description : "<<itemInfo.description();
-        qDebug()<< "Manufacturer: "<<itemInfo.manufacturer();
-        qDebug()<< "Serial Number: "<<itemInfo.serialNumber();
-        qDebug()<< "System Location: "<<itemInfo.systemLocation();
+        printPort(itemInfo);
         bool a = itemInfo.manufacturer().contains("Arduino");
         bool b = itemInfo.portName().indexOf("cu") >= 0;
-        qDebug()<<a<<" = = = "<<b;
+        //qDebug()<<a<<" = = = "<<b;
         if( a && b){
             selectedPortInfo = itemInfo;
             break;
@@ -49,7 +45,7 @@ void Connector::initSerial(){
 
         qDebug()<<"串口已经打开打开 = "<<isOpen;
         if(isOpen){
-            QObject::connect(serial,&QSerialPort::readyRead,this,&Connector::ReadData);
+            //QObject::connect(serial,&QSerialPort::readyRead,this,&Connector::ReadData);
         }
     }
 
@@ -58,10 +54,18 @@ void Connector::initSerial(){
 //串口数据返回
 void Connector::ReadData(){
     QByteArray buf = this->serial->readAll();
+    QByteArray array =buf.toHex();
     QString str = QString(buf);
     qDebug()<<"接收到的buf     = "<<buf;
     qDebug()<<"接收到的buf.str = "<<str;
 }
 
+void Connector::printPort(QSerialPortInfo itemInfo){
+    qDebug()<< "Name : "<<itemInfo.portName();
+    qDebug()<< "Description : "<<itemInfo.description();
+    qDebug()<< "Manufacturer: "<<itemInfo.manufacturer();
+    qDebug()<< "Serial Number: "<<itemInfo.serialNumber();
+    qDebug()<< "System Location: "<<itemInfo.systemLocation();
+}
 
 
