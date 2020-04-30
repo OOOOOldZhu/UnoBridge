@@ -23,7 +23,7 @@ Connector::Connector(){
     //1，连接websocket
     this->initWebsocket();
     //2，先创建串口连接
-    this->initSerial();
+    //this->initSerial();
 }
 
 void Connector::initWebsocket(){
@@ -47,14 +47,20 @@ void Connector::onNewConnection(){
 
 void Connector::onReceivedMsg(const QString& message)
 {
+    if(message.contains("initSerial")){
+        //网页要求初始化串口
+        this->initSerial();
+        return;
+    }
     //数据转换参考 https://blog.csdn.net/biersibao/article/details/82884719
 
-    qInfo() << "socket接收数据: " << Tool::tenString2HexStr(message);
-
-//    if(serial){
-//       QByteArray arr = hexString.toUtf8();
-//       serial->write(arr);
-//    }
+    //qInfo() << "socket接收数据: " << Tool::tenString2HexStr(message);
+    QByteArray arr = Tool::tenString2ByteArray2(message);
+    //qInfo() << "socket接收数据2: " << arr;
+    qInfo() << "socket接收:" << Tool::ByteArrayToHexString(arr);
+    if(serial){
+       serial->write(arr);
+    }
 }
 
 void Connector::socketDisconnected()
@@ -89,7 +95,7 @@ void Connector::initSerial(){
         serial->setPortName(selectedPortInfo.portName());
         //connect(serial,&QSerialPort::readyRead,this,&Connector::ReadData);
         //QObject::connect(serial, SIGNAL(readyRead()), this, SLOT(ReadData()));
-        serial->setBaudRate(QSerialPort::Baud115200);  //波特率
+        serial->setBaudRate(QSerialPort::Baud57600);  //波特率
         serial->setDataBits(QSerialPort::Data8);     //数据位
         serial->setParity(QSerialPort::NoParity);    //无奇偶校验
         serial->setStopBits(QSerialPort::OneStop);   //无停止位
