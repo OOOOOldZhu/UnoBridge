@@ -11,7 +11,6 @@
 
 //创建websocket
 #include <QWebSocketServer>
-#include "inspection_server.h"
 
 #include "connector.h"
 
