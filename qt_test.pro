@@ -24,14 +24,12 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     connector.cpp \
-    inspection_server.cpp \
     main.cpp \
     mainwindow.cpp \
     tool.cpp
 
 HEADERS += \
     connector.h \
-    inspection_server.h \
     mainwindow.h \
     tool.h
 
