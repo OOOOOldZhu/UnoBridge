@@ -36,6 +36,8 @@ private:
 
     void initSerial();
     void readData();
+
+    void socketSendMsg(QString str);
     void printPort(QSerialPortInfo itemInfo);
 
 //signals:

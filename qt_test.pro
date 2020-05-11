@@ -4,8 +4,8 @@ QT       += serialport
 #创建websocket倒包
 QT       += websockets
 
-RC_ICONS = htd.ico
-
+RC_ICONS = ironman.icns
+#ICON = ironman.icns
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -43,3 +43,8 @@ TRANSLATIONS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    ../../Desktop/ironman.icns \
+    ../../Desktop/ironman.ico \
+    ../../Desktop/ironman.png

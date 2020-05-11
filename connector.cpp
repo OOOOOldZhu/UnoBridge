@@ -42,6 +42,10 @@ void Connector::onNewConnection(){
     QObject::connect(socket, &QWebSocket::textMessageReceived, this, &Connector::onReceivedMsg);
     QObject::connect(socket, &QWebSocket::disconnected, this, &Connector::socketDisconnected);
 
+//    for(int i = 0;i<soketList.length();i++){
+//        soketList[i]->close();
+//    }
+    soketList.clear();
     this->soketList.append(socket);
 }
 
@@ -53,10 +57,7 @@ void Connector::onReceivedMsg(const QString& message)
         return;
     }
     //数据转换参考 https://blog.csdn.net/biersibao/article/details/82884719
-
-    //qInfo() << "socket接收数据: " << Tool::tenString2HexStr(message);
     QByteArray arr = Tool::tenString2ByteArray2(message);
-    //qInfo() << "socket接收数据2: " << arr;
     qInfo() << "socket接收:" << Tool::ByteArrayToHexString(arr);
     if(serial){
        serial->write(arr);
@@ -66,11 +67,13 @@ void Connector::onReceivedMsg(const QString& message)
 void Connector::socketDisconnected()
 {
     qInfo() << "socket断开连接";
+    this->serial->close();
+    this->serial->clear();
 }
 
 
 void Connector::initSerial(){
-    //qDebug()<<"1.initSerial() 执行了";
+    qDebug()<<"1.initSerial() 执行了";
     QList<QSerialPortInfo> serialList = QSerialPortInfo::availablePorts();
     QSerialPortInfo selectedPortInfo;
     for(int i = 0;i < serialList.length();i++){
@@ -90,7 +93,6 @@ void Connector::initSerial(){
 
     if(!selectedPortInfo.isNull()){
         QSerialPort *serial = new QSerialPort;
-        this->serial=serial;
         //设置串口名 cu.usbmodem142401
         serial->setPortName(selectedPortInfo.portName());
         //connect(serial,&QSerialPort::readyRead,this,&Connector::ReadData);
@@ -104,9 +106,13 @@ void Connector::initSerial(){
 
         qDebug()<<"串口已经打开打开 = "<<isOpen;
         if(isOpen){
+            this->serial=serial;
             QObject::connect(serial,&QSerialPort::readyRead,this,&Connector::readData);
-            //            connect(serial,SIGNAL(readyRead()),this,SLOT(readData()));
+            socketSendMsg("suc msg: initSerial success");
         }
+    }else{
+        qDebug()<< "串口集合为空 ~";
+        socketSendMsg("err msg: arduino serialport null");
     }
 
 }
@@ -120,14 +126,20 @@ void Connector::readData(){
         QString str = QString(array);
 
         qDebug()<<"串口接收到的buf.str = "<<str;
-        for(int i = 0;i<soketList.length();i++){
-            soketList[i]->sendTextMessage(str);
-        }
+        socketSendMsg(str);
+    }
+}
 
+void Connector::socketSendMsg(QString msg){
+    for(int i = 0;i<soketList.length();i++){
+        soketList[i]->sendTextMessage(msg);
     }
 }
 
 void Connector::printPort(QSerialPortInfo itemInfo){
+    if(itemInfo.isNull()){
+        return;
+    }
     qDebug()<< "Name : "<<itemInfo.portName();
     qDebug()<< "Description : "<<itemInfo.description();
     qDebug()<< "Manufacturer: "<<itemInfo.manufacturer();
