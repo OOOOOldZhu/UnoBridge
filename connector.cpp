@@ -108,6 +108,8 @@ void Connector::initSerial(){
         if(isOpen){
             this->serial=serial;
             QObject::connect(serial,&QSerialPort::readyRead,this,&Connector::readData);
+            //串口主动调用，才会执行这个回调函数
+            //QObject::connect(serial,&QSerialPort::aboutToClose,this,&Connector::onDisconnected);
             socketSendMsg("suc msg: initSerial success");
         }
     }else{
@@ -134,6 +136,11 @@ void Connector::socketSendMsg(QString msg){
     for(int i = 0;i<soketList.length();i++){
         soketList[i]->sendTextMessage(msg);
     }
+}
+
+void Connector:: onDisconnected(){
+    qDebug()<<"串口已经关闭";
+    socketSendMsg("err msg: serialport close");
 }
 
 void Connector::printPort(QSerialPortInfo itemInfo){

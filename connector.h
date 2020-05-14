@@ -36,7 +36,7 @@ private:
 
     void initSerial();
     void readData();
-
+    void onDisconnected();
     void socketSendMsg(QString str);
     void printPort(QSerialPortInfo itemInfo);
 
