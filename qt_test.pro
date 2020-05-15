@@ -26,12 +26,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    BleComm.cpp \
+    IToBoardComm.cpp \
+    SerialComm.cpp \
     connector.cpp \
     main.cpp \
     mainwindow.cpp \
     tool.cpp
 
 HEADERS += \
+    BleComm.h \
+    IToBoardComm.h \
+    SerialComm.h \
     connector.h \
     mainwindow.h \
     tool.h
