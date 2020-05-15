@@ -58,12 +58,4 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-DISTFILES += \
-    ../../Desktop/gangtiexia.icns \
-    ../../Desktop/ironman.icns \
-    ../../Desktop/ironman.ico \
-    ../../Desktop/ironman.png \
-    app.rc
 
-RESOURCES += \
-    update.qrc
