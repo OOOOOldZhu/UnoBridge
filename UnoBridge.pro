@@ -7,8 +7,13 @@ QT       += websockets
 QT       += bluetooth
 
 
-RC_ICONS = ironman.icns
-#ICON = ironman.icns
+#RC_ICONS = gangtiexia.icns
+#ICON = gangtiexia.icns
+
+#OTHER_FILES += app.rc
+#RC_FILE += app.rc
+
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -46,7 +51,7 @@ FORMS += \
     mainwindow.ui
 
 TRANSLATIONS += \
-    qt_test_yue_CN.ts
+    UnoBridge_yue_CN.ts
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -54,6 +59,11 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
+    ../../Desktop/gangtiexia.icns \
     ../../Desktop/ironman.icns \
     ../../Desktop/ironman.ico \
-    ../../Desktop/ironman.png
+    ../../Desktop/ironman.png \
+    app.rc
+
+RESOURCES += \
+    update.qrc

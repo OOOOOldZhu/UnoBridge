@@ -1,2 +1,2 @@
-# qt_test
+# UnoBridge
 QT的demo
