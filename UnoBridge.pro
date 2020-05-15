@@ -3,9 +3,17 @@ QT       += core gui
 QT       += serialport
 #创建websocket倒包
 QT       += websockets
+#导入bluetooth包
+QT       += bluetooth
 
-RC_ICONS = ironman.icns
-#ICON = ironman.icns
+
+#RC_ICONS = gangtiexia.icns
+#ICON = gangtiexia.icns
+
+#OTHER_FILES += app.rc
+#RC_FILE += app.rc
+
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -23,12 +31,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    BleComm.cpp \
+    IToBoardComm.cpp \
+    SerialComm.cpp \
     connector.cpp \
     main.cpp \
     mainwindow.cpp \
     tool.cpp
 
 HEADERS += \
+    BleComm.h \
+    IToBoardComm.h \
+    SerialComm.h \
     connector.h \
     mainwindow.h \
     tool.h
@@ -37,7 +51,7 @@ FORMS += \
     mainwindow.ui
 
 TRANSLATIONS += \
-    qt_test_yue_CN.ts
+    UnoBridge_yue_CN.ts
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -45,6 +59,11 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 DISTFILES += \
+    ../../Desktop/gangtiexia.icns \
     ../../Desktop/ironman.icns \
     ../../Desktop/ironman.ico \
-    ../../Desktop/ironman.png
+    ../../Desktop/ironman.png \
+    app.rc
+
+RESOURCES += \
+    update.qrc
