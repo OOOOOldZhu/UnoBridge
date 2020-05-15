@@ -3,6 +3,9 @@ QT       += core gui
 QT       += serialport
 #创建websocket倒包
 QT       += websockets
+#导入bluetooth包
+QT       += bluetooth
+
 
 RC_ICONS = ironman.icns
 #ICON = ironman.icns

@@ -17,6 +17,10 @@
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
 
+//蓝牙通讯
+#include <QBluetoothDeviceDiscoveryAgent.h>
+#include <QLowEnergyController.h>
+
 #include <tool.h>
 
 Connector::Connector(){
@@ -56,6 +60,18 @@ void Connector::onReceivedMsg(const QString& message)
         this->initSerial();
         return;
     }
+    if(message.contains("initBle")){
+        //网页请求蓝牙连接
+        this->initBle();
+        return;
+    }
+    if(message.contains("closeBle")){
+        if(this->discoveryAgent){
+            discoveryAgent->stop();
+            discoveryAgent = NULL;
+        }
+        return;
+    }
     //数据转换参考 https://blog.csdn.net/biersibao/article/details/82884719
     QByteArray arr = Tool::tenString2ByteArray2(message);
     qInfo() << "socket接收:" << Tool::ByteArrayToHexString(arr);
@@ -70,6 +86,78 @@ void Connector::socketDisconnected()
     this->serial->close();
     this->serial->clear();
 }
+
+void Connector::initBle(){
+    qInfo()<<"initBle() . . .";
+    //参考：https://blog.csdn.net/wqwqwq604/article/details/93198438
+    //创建搜索服务
+    QBluetoothDeviceDiscoveryAgent *discoveryAgent =new QBluetoothDeviceDiscoveryAgent(this);
+    this->discoveryAgent = discoveryAgent;
+    //设置BLE的搜索时间
+    //discoveryAgent->setLowEnergyDiscoveryTimeout(5000);
+    //找到设备之后添加到蓝牙列表中
+    //connect(discoveryAgent,SIGNAL(deviceDiscovered(QBluetoothDeviceInfo)),this,SLOT(onFindBleDevices(QBluetoothDeviceInfo)));
+    //connect(discoveryAgent, SIGNAL(finished()), this, SLOT(onScanFinished()));
+    //connect(discoveryAgent, SIGNAL(canceled()), this, SLOT());
+    QObject::connect(discoveryAgent,&QBluetoothDeviceDiscoveryAgent::deviceDiscovered,this,&Connector::onFindBleDevice);
+    //QObject::connect(discoveryAgent,&QBluetoothDeviceDiscoveryAgent::finished,this,&Connector::onScanFinished);
+    //QObject::connect(discoveryAgent,&QBluetoothDeviceDiscoveryAgent::canceled,this,&Connector::onScanCanceled);
+    discoveryAgent->start();
+}
+
+void Connector::onFindBleDevice(const QBluetoothDeviceInfo &info){
+    QDateTime current_date_time =QDateTime::currentDateTime();
+    QString current_date =current_date_time.toString("yyyy.MM.dd hh:mm:ss.zzz ddd");
+    qInfo()<<"- - - - - - - - - - - - "+current_date+"- - - - - - - - - - - - - - - - - - ";
+//    if (info.coreConfigurations() & QBluetoothDeviceInfo::LowEnergyCoreConfiguration) {
+//            qWarning() << "Discovered LE Device name: " << info.name() << " Address: "<< info.address().toString();
+//    }
+    bool b ;
+    b= info.address()==QBluetoothAddress("B4:4B:0E:04:2D:7A");
+    //b = info.name().indexOf("mCookie")>-1;
+    if(b){
+        qInfo()<<"name ="+info.name();
+        qInfo()<<"rssi ="+info.rssi();
+        qInfo()<<"address="+info.address().toString();
+        discoveryAgent->stop();
+
+        bleController = QLowEnergyController::createCentral(info, this);//创建中央控制器
+        QObject::connect(bleController, &QLowEnergyController::connected,this, &Connector::deviceConnected);
+        QObject::connect(bleController, &QLowEnergyController::disconnected,this, &Connector::deviceDisconnected);
+        QObject::connect(bleController, &QLowEnergyController::serviceDiscovered,this, &Connector::serviceDiscovered);
+        QObject::connect(bleController, &QLowEnergyController::discoveryFinished,this, &Connector::serviceScanDone);
+        //QObject::connect(bleController, &QLowEnergyController::error,this, &Connector::onBleConneErr);
+        //QObject::connect(bleController, SIGNAL(error(QLowEnergyController::Error)),this, SLOT(onBleConneErr(QLowEnergyController::Error)));
+        bleController->connectToDevice();//建立连接
+    }
+}
+void Connector::onScanFinished(){
+    qInfo() << "ble onScanFinished";
+}
+void Connector::onScanCanceled(){
+    qInfo() << "ble onScanCanceled";
+}
+void Connector::serviceDiscovered(const QBluetoothUuid &gatt){
+    qInfo()<<"QBluetoothUuid = "<<gatt;
+    if (gatt == QBluetoothUuid(QBluetoothUuid::HeartRate)) {
+            //setMessage("Heart Rate service discovered. Waiting for service scan to be done...");
+            //foundHeartRateService = true;
+     }
+}
+void Connector::serviceScanDone(){
+    qInfo()<<"serviceScanDone ()";
+}
+void Connector::onBleConneErr(QLowEnergyController::Error newError){
+    qInfo()<<"onBleConneErr ()"<<newError;
+}
+void Connector::deviceConnected(){
+    qInfo()<<"deviceConnected ()";
+    bleController->discoverServices();
+}
+void Connector::deviceDisconnected(){
+    qInfo()<<"deviceDisconnected ()";
+}
+
 
 
 void Connector::initSerial(){
