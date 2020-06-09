@@ -4,7 +4,7 @@
 #define MyAppName "袋鼠硬件连接器"
 #define MyAppVersion "1.0"
 #define MyAppPublisher "海天地科技集团"
-#define MyAppURL "http://www.example.com/"
+#define MyAppURL "http://www.haitiand.com/"
 #define MyAppExeName "UnoBridge.exe"
 
 [Setup]
@@ -43,7 +43,7 @@ Source: "C:\Users\Administrator\Desktop\zhuhaiwen\export\*"; DestDir: "{app}"; F
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon;IconFilename:"{app}\gangtiexia.ico" 
 
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
