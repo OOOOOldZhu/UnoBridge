@@ -12,17 +12,12 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication qapplication(argc, argv);
-//    QString dir = QApplication::applicationDirPath();
-//    QApplication::addLibraryPath("./images");
+    QApplication app(argc, argv);
 
-    qapplication.setWindowIcon(QIcon("gangtiexia.icns"));
-//    MainWindow w;
-//    w.show();
     qDebug()<< "main.cpp执行了";
-
+    app.setWindowIcon(QIcon("gangtiexia.icns"));
     new Connector();
 
-    return qapplication.exec();
+    return app.exec();
 }
 
