@@ -1,2 +1,3 @@
-# qt_test
-QT的demo
+# UnoBridge
+
+QT的串口通讯，稍后会加入蓝牙通讯。
