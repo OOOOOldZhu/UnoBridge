@@ -2,18 +2,10 @@
 #include<QTextCodec>
 #include<QIcon>
 #include<QPushButton>
-#include<QTextCodec>
-#include<QTextCodec>
-#include<QTextCodec>
-#include<QTextCodec>
-#include<QTextCodec>
-
-
 
 MyQWidget::MyQWidget()
 
 {
-
         //QTextCodec::setCodecForTr(QTextCodec::codecForName("GB2312"));
 
         this->setMinimumSize(200,100);
