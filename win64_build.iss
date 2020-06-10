@@ -24,7 +24,7 @@ DisableProgramGroupPage=yes
 ; 以下行取消注释，以在非管理安装模式下运行（仅为当前用户安装）。
 ;PrivilegesRequired=lowest
 OutputDir=C:\Users\Administrator\Desktop\zhuhaiwen\setup
-OutputBaseFilename=lianjieqi
+OutputBaseFilename=UnoBridge
 SetupIconFile=C:\Users\Administrator\Desktop\zhuhaiwen\qt_test\gangtiexia.ico
 Compression=lzma
 SolidCompression=yes
