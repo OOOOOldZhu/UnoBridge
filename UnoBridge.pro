@@ -34,6 +34,7 @@ SOURCES += \
     BleComm.cpp \
     IToBoardComm.cpp \
     SerialComm.cpp \
+    SingleApplication.cpp \
     connector.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -43,6 +44,7 @@ HEADERS += \
     BleComm.h \
     IToBoardComm.h \
     SerialComm.h \
+    SingleApplication.h \
     connector.h \
     mainwindow.h \
     tool.h
