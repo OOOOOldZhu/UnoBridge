@@ -33,6 +33,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     BleComm.cpp \
     IToBoardComm.cpp \
+    QSingleApplication.cpp \
     SerialComm.cpp \
     connector.cpp \
     main.cpp \
@@ -42,6 +43,7 @@ SOURCES += \
 HEADERS += \
     BleComm.h \
     IToBoardComm.h \
+    QSingleApplication.h \
     SerialComm.h \
     connector.h \
     mainwindow.h \

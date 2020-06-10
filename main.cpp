@@ -8,11 +8,18 @@
 
 
 #include <QIcon>
+#include <QMessageBox>
 #include "connector.h"
+#include "QSingleApplication.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+    QSingleApplication app(argc,argv);
+    if (app.isRunning())
+    {
+       QMessageBox::information(NULL, QStringLiteral("提示"), QStringLiteral("程序已运行！"));
+       exit(0);
+    }
 
     qDebug()<< "main.cpp执行了";
     app.setWindowIcon(QIcon("gangtiexia.icns"));
