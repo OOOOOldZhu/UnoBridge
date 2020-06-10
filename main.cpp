@@ -10,6 +10,7 @@
 #include <QMessageBox>
 #include "connector.h"
 #include "SingleApplication.h"
+#include "MyQWidget.h"
 
 int main(int argc, char *argv[]) {
     SingleApplication app(argc, argv);
@@ -18,7 +19,9 @@ int main(int argc, char *argv[]) {
        return 0;
     }
     qDebug()<< "main.cpp执行了";
-    app.setWindowIcon(QIcon("gangtiexia.icns"));
-    new Connector();
+    app.setWindowIcon(QIcon(":/img/gangtiexia.png"));
+    //new Connector();
+    MyQWidget myQWidget;
+    myQWidget.show();
     return app.exec();
 }

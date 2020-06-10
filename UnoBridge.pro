@@ -33,6 +33,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     BleComm.cpp \
     IToBoardComm.cpp \
+    MyQWidget.cpp \
     SerialComm.cpp \
     SingleApplication.cpp \
     connector.cpp \
@@ -43,6 +44,7 @@ SOURCES += \
 HEADERS += \
     BleComm.h \
     IToBoardComm.h \
+    MyQWidget.h \
     SerialComm.h \
     SingleApplication.h \
     connector.h \
@@ -62,5 +64,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     gangtiexia.icns
+
+RESOURCES += \
+    res.qrc
 
 
