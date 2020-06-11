@@ -1,6 +1,7 @@
 #include "MyQWidget.h"
 #include<QTextCodec>
 #include<QIcon>
+#include<QMenu>
 #include<QPushButton>
 
 MyQWidget::MyQWidget()
@@ -36,6 +37,8 @@ MyQWidget::MyQWidget()
 
     setWindowTitle(tr("Systray"));
 
+    generateMenu();
+
     //托盘中鼠标右击的槽函数
     //    connect(trayIcon,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
     //            this,SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
@@ -43,11 +46,11 @@ MyQWidget::MyQWidget()
 }
 void MyQWidget::iconActivated(QSystemTrayIcon::ActivationReason reason){
     switch (reason) {
+    case QSystemTrayIcon::Context:
+        qDebug()<< "Context鼠标右击";
+        break;
     case QSystemTrayIcon::Unknown:
         qDebug()<< "Unknown";
-        break;
-    case QSystemTrayIcon::Context:
-        qDebug()<< "Context";
         break;
     case QSystemTrayIcon::Trigger:
         qDebug()<< "单击";
@@ -61,4 +64,18 @@ void MyQWidget::iconActivated(QSystemTrayIcon::ActivationReason reason){
     default:
         ;
     }
+}
+void MyQWidget::generateMenu(){
+
+    QAction * versionItem = new QAction(tr("版本号："), this);
+    //connect(versionItem, SIGNAL(triggered()), qApp, SLOT(quit()));
+
+    QAction * quitItem = new QAction(tr("退出 (&Q)"), this);
+    connect(quitItem, SIGNAL(triggered()), qApp, SLOT(quit()));
+
+    trayIconMenu = new QMenu(this);
+    trayIconMenu->addAction(versionItem);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(quitItem);
+    trayIcon->setContextMenu(trayIconMenu);
 }

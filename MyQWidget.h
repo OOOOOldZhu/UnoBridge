@@ -20,7 +20,11 @@ private:
 
         QSystemTrayIcon *trayIcon;
 
+        QMenu *trayIconMenu;
+
         void iconActivated(QSystemTrayIcon::ActivationReason reason);
+
+        void generateMenu();
 };
 
 
