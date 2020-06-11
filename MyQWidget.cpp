@@ -67,7 +67,7 @@ void MyQWidget::iconActivated(QSystemTrayIcon::ActivationReason reason){
 }
 void MyQWidget::generateMenu(){
 
-    QAction * versionItem = new QAction(tr("版本号："), this);
+    QAction * versionItem = new QAction(tr("版本号：v1.0.0"), this);
     //connect(versionItem, SIGNAL(triggered()), qApp, SLOT(quit()));
 
     QAction * quitItem = new QAction(tr("退出 (&Q)"), this);
