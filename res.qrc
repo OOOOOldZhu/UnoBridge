@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/img">
+        <file>gangtiexia.ico</file>
+        <file>gangtiexia.icns</file>
+        <file>xin.ico</file>
+        <file>gangtiexia.png</file>
+    </qresource>
+</RCC>
