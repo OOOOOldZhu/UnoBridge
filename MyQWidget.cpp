@@ -12,7 +12,7 @@ MyQWidget::MyQWidget()
 
         this->setMaximumSize(200,100);
 
-        b1=new QPushButton("hello world",this);
+        b1=new QPushButton("程序开始启动！",this);
 
         b1->setGeometry(20,20,160,40);
 
@@ -24,11 +24,11 @@ MyQWidget::MyQWidget()
 
         trayIcon->setIcon(icon);
 
-        trayIcon->setToolTip("a trayicon example");
+        trayIcon->setToolTip("鼠标右击弹出菜单");
 
-        QString titlec=tr("Hello");
+        QString titlec=tr("程序开始启动");
 
-        QString textc=QString::fromLocal8Bit("Hello QT?");
+        QString textc=QString::fromLocal8Bit("Minimize to tray");
 
         trayIcon->show();
 

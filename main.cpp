@@ -22,6 +22,6 @@ int main(int argc, char *argv[]) {
     app.setWindowIcon(QIcon(":/img/gangtiexia.ico"));
     //new Connector();
     MyQWidget myQWidget;
-    myQWidget.show();
+    //myQWidget.show();
     return app.exec();
 }
