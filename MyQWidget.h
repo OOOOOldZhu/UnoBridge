@@ -20,6 +20,7 @@ private:
 
         QSystemTrayIcon *trayIcon;
 
+        void iconActivated(QSystemTrayIcon::ActivationReason reason);
 };
 
 
