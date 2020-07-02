@@ -57,10 +57,10 @@ void Connector::onReceivedMsg(const QString& message)
     }
     if(message.contains("initBle")){
         //网页请求蓝牙连接
-        if(!toBoardComm){
+        //if(!toBoardComm){
            toBoardComm = new BleComm(this);
            toBoardComm->init();
-        }
+        //}
         return;
     }
     if(message.contains("close")){

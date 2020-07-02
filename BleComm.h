@@ -15,6 +15,7 @@ Q_OBJECT
 QBluetoothDeviceDiscoveryAgent *discoveryAgent;
 QLowEnergyController *bleController;
 Connector *connector;
+QLowEnergyService *m_Service;
 
 // IShape interface
 public:
@@ -33,6 +34,9 @@ private:
     void deviceConnected();
     void deviceDisconnected();
 
+    void SL_serviceStateChanged(QLowEnergyService::ServiceState newState);
+    void SL_characteristicChanged(const QLowEnergyCharacteristic &info,const QByteArray &value);
+    void SL_descriptorWritten(const QLowEnergyDescriptor &info,const QByteArray &value);
 };
 
 

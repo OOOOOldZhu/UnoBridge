@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
     }
     qDebug()<< "main.cpp执行了";
     app.setWindowIcon(QIcon(":/img/gangtiexia.ico"));
-    //new Connector();
+    new Connector();
     MyQWidget myQWidget;
     //myQWidget.show();
     return app.exec();
