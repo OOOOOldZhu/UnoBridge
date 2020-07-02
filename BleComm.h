@@ -16,6 +16,8 @@ QBluetoothDeviceDiscoveryAgent *discoveryAgent;
 QLowEnergyController *bleController;
 Connector *connector;
 QLowEnergyService *m_Service;
+bool m_foundHeartRateService;
+QBluetoothUuid serviceUuid;
 
 // IShape interface
 public:
@@ -29,7 +31,7 @@ private:
     void onScanFinished();
     void onScanCanceled();
     void serviceDiscovered(const QBluetoothUuid &gatt);
-    void serviceScanDone();
+    void discoveryFinished();
     void onBleConneErr(QLowEnergyController::Error newError);
     void deviceConnected();
     void deviceDisconnected();
