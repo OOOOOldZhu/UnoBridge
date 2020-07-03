@@ -17,7 +17,7 @@ QLowEnergyController *bleController;
 Connector *connector;
 QLowEnergyService *m_Service;
 bool m_foundHeartRateService;
-QBluetoothUuid serviceUuid;
+//QBluetoothUuid serviceUuid;
 
 // IShape interface
 public:

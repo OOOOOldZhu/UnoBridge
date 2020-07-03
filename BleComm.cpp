@@ -99,7 +99,6 @@ void BleComm::serviceDiscovered(const QBluetoothUuid &uuid){
         //foundHeartRateService = true;
     }
     if(uuid.toString() == "{0000ffe0-0000-1000-8000-00805f9b34fb}"){
-        this->serviceUuid = uuid;
         m_foundHeartRateService = true;
     }
 }
@@ -107,7 +106,8 @@ void BleComm::serviceDiscovered(const QBluetoothUuid &uuid){
 void BleComm::discoveryFinished(){
     qInfo()<<"discoveryFinished ()";
     if (m_foundHeartRateService){
-        this->m_Service = bleController->createServiceObject(serviceUuid);
+        QString s = "{0000ffe0-0000-1000-8000-00805f9b34fb}";
+        this->m_Service = bleController->createServiceObject(QBluetoothUuid(s));
         //如果找到的服务中有所需服务，并匹配、创建成功则进入if语句，链接相应的信号-槽
         if(m_Service){
             QObject::connect(m_Service, &QLowEnergyService::stateChanged, this, &BleComm::SL_serviceStateChanged);//状态改变信号
@@ -126,20 +126,25 @@ void BleComm::SL_serviceStateChanged(QLowEnergyService::ServiceState newState){
         break;
     case QLowEnergyService::ServiceDiscovered:
     {
-        //setInfo(tr("Service discovered."));
-        const QLowEnergyCharacteristic hrChar = m_Service->characteristic(QBluetoothUuid(serviceUuid));
-        qInfo()<<"1111"<<hrChar.isValid();
-        if (!hrChar.isValid()) {
-           QLowEnergyDescriptor m_notificationDesc = hrChar.descriptor(QBluetoothUuid::ClientCharacteristicConfiguration);
-           bool notify_isValid = m_notificationDesc.isValid();
-           qInfo()<<"1111"<<notify_isValid;
-            if(notify_isValid)
-            {
-                //写描述符
-                m_Service->writeDescriptor(m_notificationDesc, QByteArray::fromHex("0100"));
-                //   m_service->writeDescriptor(m_notificationDesc, QByteArray::fromHex("FEE1"));
-            }
+        QList<QLowEnergyCharacteristic> list = m_Service->characteristics();
+        QLowEnergyCharacteristic hrChar;
+        for(int i=0;i<list.length();i++){
+            qInfo()<<"QLowEnergyCharacteristic = "<<list[i].name()<<"--"<<list[i].uuid();
+//            if(list[i].uuid().toString() == "{0000ffe1-0000-1000-8000-00805f9b34fb}"){
+//                hrChar = list[i];
+//            }
         }
+        QString s = "{0000ffe1-0000-1000-8000-00805f9b34fb}";
+        hrChar = m_Service->characteristic(QBluetoothUuid(s));
+        qInfo()<<"hrChar.isValid() = "<<hrChar.isValid();
+        QLowEnergyDescriptor m_notificationDesc = hrChar.descriptor(QBluetoothUuid::ClientCharacteristicConfiguration);
+        bool notify_isValid = m_notificationDesc.isValid();
+        qInfo()<<"notify_isValid:"<<notify_isValid;
+        QByteArray ba;
+        ba.resize(2);
+        ba[0] = 0x01;
+        ba[1] = 0x00;
+        m_Service->writeDescriptor(m_notificationDesc, ba);
         if(connector)connector->socketSendMsg("suc msg: initBle success");
         break;
     }
@@ -157,13 +162,14 @@ void BleComm::SL_characteristicChanged(const QLowEnergyCharacteristic &info,cons
 }
 
 void BleComm::SL_descriptorWritten(const QLowEnergyDescriptor &info,const QByteArray &value){
-    qDebug() << "SL_descriptorWritten() = ";
+    qDebug() << "SL_descriptorWritten()数据写入成功了 ";
 }
 
 void BleComm::send(QByteArray arr){
     qDebug() << "蓝牙发送 : "<<arr;
-    const QLowEnergyCharacteristic hrChar = m_Service->characteristic(QBluetoothUuid(serviceUuid));
-    m_Service->writeCharacteristic(hrChar,arr, QLowEnergyService::WriteWithResponse);
+    QString s = "{0000ffe1-0000-1000-8000-00805f9b34fb}";
+    const QLowEnergyCharacteristic hrChar = m_Service->characteristic(QBluetoothUuid(s));
+    m_Service->writeCharacteristic(hrChar,arr, QLowEnergyService::WriteWithoutResponse);
 }
 
 void BleComm::closeComm(){
