@@ -131,8 +131,9 @@ void BleComm::SL_serviceStateChanged(QLowEnergyService::ServiceState newState){
         qInfo()<<"1111"<<hrChar.isValid();
         if (!hrChar.isValid()) {
            QLowEnergyDescriptor m_notificationDesc = hrChar.descriptor(QBluetoothUuid::ClientCharacteristicConfiguration);
-            //值为真
-            if(m_notificationDesc.isValid())
+           bool notify_isValid = m_notificationDesc.isValid();
+           qInfo()<<"1111"<<notify_isValid;
+            if(notify_isValid)
             {
                 //写描述符
                 m_Service->writeDescriptor(m_notificationDesc, QByteArray::fromHex("0100"));
