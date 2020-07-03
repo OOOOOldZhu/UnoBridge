@@ -80,7 +80,7 @@ void SerialComm::readData(){
 
 
 void SerialComm::send(QByteArray arr){
-    //this->serial->write(arr);
+    qDebug()<<"串口发送"<<arr;
     this->serial->write(arr);
 }
 
